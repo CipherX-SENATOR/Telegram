@@ -29,6 +29,7 @@ admin = ("1469547340")
 
 #                          [ SET LIST  ]	                       #
 
+dontlock = []
 listsEnemy = []
 lock = []
 
@@ -577,7 +578,18 @@ async def Bot(c:Client, m:Message):
 				open("Tools/lock","w").write(command)
 				char = "on"if command == "on" else "off"
 				await m.edit(f"𝕮𝕴𝕻𝕳𝕰𝕽-𝖃 ↴\n`L`**O**`CK` **M**O**D**E `{command} 🔐`")
-
+		if text.startswith('Unlock'):
+			try:
+				dontlock.append(m.chat.id)
+				await c.delete_messages(m.chat.id, m.message_id)
+			except:
+				pass
+		if text.startswith('Locks'):
+			try:
+				dontlock.remove(m.chat.id)
+				await c.delete_messages(m.chat.id, m.message_id)
+			except:
+				pass
 		if text.startswith(".reply "):
 			command = text.replace(".reply","").strip()
 			if command == "on"or"off":
@@ -821,10 +833,46 @@ async def Bot(c:Client, m:Message):
 
 	except:
 		pass
-
 @app.on_message(filters.private)
-async def Enemy1(c:Client, m:Message):
+async def Lock(c:Client, m:Message):
 	try:
+		if os.path.exists("Tools/lock"):
+			mode = open("Tools/lock").read()
+		else: 
+			mode = "off"
+		if mode == "on":
+			count = dontlock.count(m.from_user.id)
+			if count == 1:
+				pass
+			else:
+				lock.append(m.from_user.id)
+				count_1 = lock.count(m.from_user.id)
+				if count_1 == 1:
+					await m.reply('❌ **WanTed** • [ 1/5 ] • ❌\n\n🔹 **|||Please Dont SendMessage|||** 🔹')
+				if count_1 == 2:
+					await m.reply('❌ **WanTed** • [ 2/5 ] • ❌\n\n🔹 **|||Please Dont SendMessage|||** 🔹')
+				if count_1 == 3:
+					await m.reply('❌ **WanTed** • [ 3/5 ] • ❌\n\n🔹 **|||Please Dont SendMessage|||** 🔹')
+				if count_1 == 4:
+					await m.reply('❌ **WanTed** • [ 4/5 ] • ❌\n\n🔹 **|||Please Dont SendMessage|||** 🔹')
+				if count_1 == 5:
+					await m.reply('🔹 •| **WARRNING** |• 🔹\n\n🔺 [ `BLOCK YOU` ] 🔺\n\n• [ 5/5 ] •')
+					await c.block_user(m.chat.id)
+
+		if os.path.exists("Tools/Echo"):
+			mode = open("Tools/Echo").read()
+		else: 
+			mode = "off"
+		if mode == "on":
+			await m.copy(m.chat.id)
+			
+		if os.path.exists("Tools/For"):
+			mode = open("Tools/For").read()
+		else: 
+			mode = "off"
+		if mode == "on":
+			await m.forward(m.chat.id)
+
 		if os.path.exists("Tools/Enemy"):
 			mode = open("Tools/Enemy").read()
 		else:
@@ -835,33 +883,8 @@ async def Enemy1(c:Client, m:Message):
 					user = m.from_user.id
 					if user == int(i):
 						await m.reply(random.choice(Fosh),quote=True)
-
 			except:
 				pass 
-	except ValueError:
-		open("Tools/Enemy","w").write("off")
-		await c.send_message("me", f"𝕮𝕴𝕻𝕳𝕰𝕽-𝖃 ↴\n**EN**`EM`**Y** **o**`f`**f**")
-@app.on_message(filters.private)
-async def Lock(c:Client, m:Message):
-	try:
-		if os.path.exists("Tools/lock"):
-			mode = open("Tools/lock").read()
-		else: 
-			mode = "off"
-		if mode == "on":
-			print(m)
-		if os.path.exists("Tools/Echo"):
-			mode = open("Tools/Echo").read()
-		else: 
-			mode = "off"
-		if mode == "on":
-			await m.copy(m.chat.id)
-		if os.path.exists("Tools/For"):
-			mode = open("Tools/For").read()
-		else: 
-			mode = "off"
-		if mode == "on":
-			await m.forward(m.chat.id)
 	except ValueError:
 		print("LOCK ERROR")
 
